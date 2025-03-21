@@ -15,10 +15,20 @@ struct HomeView: View {
             UberMapViewRepresentable()
                 .ignoresSafeArea()
             
-            LocationSearchActivationView()
-                .padding(.top,72)
+            if showLocationSearchView {
+                LocationSearchView()
+            }
+            else {
+                LocationSearchActivationView()
+                    .padding(.top,72)
+                    .onTapGesture {
+                        withAnimation(.spring()) {
+                            showLocationSearchView.toggle()
+                        }
+                    }
+            }
             
-            MapViewActionButton()
+            MapViewActionButton(showLocationSearchView: $showLocationSearchView)
                 .padding(.leading)
                 .padding(.top,4)
                 
