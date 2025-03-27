@@ -3,6 +3,8 @@ import SwiftUI
 struct LocationSearchView: View {
     @State var startLocationText: String = ""
     @State var destinationLocationText: String = ""
+    @StateObject var viewModel = LocationSearchViewModel()
+    
     
     var body: some View {
         VStack {
@@ -37,9 +39,9 @@ struct LocationSearchView: View {
                         .cornerRadius(10)
                         .padding(.trailing)
                     
-                    TextField("", text: $destinationLocationText)
+                    TextField("", text: $viewModel.queryFragment)
                         .padding(.horizontal,10)
-                        .placeholder(when: destinationLocationText.isEmpty) {
+                        .placeholder(when: $viewModel.results.isEmpty) {
                             Text("Where to?")
                                 .padding(.leading, 10)
                                 .foregroundStyle(Color(.systemGray))
@@ -61,8 +63,11 @@ struct LocationSearchView: View {
             // List view
             ScrollView {
                 VStack(alignment: .leading) {
-                    ForEach(0..<20) { _ in
-                        LocationSearchResultCell()
+                    ForEach(viewModel.results , id: \.self) { result in
+                        LocationSearchResultCell(
+                            location: result.title,
+                            address: result.subtitle
+                        )
                     }
                 }
             }
@@ -72,6 +77,7 @@ struct LocationSearchView: View {
 }
 
 extension View {
+    
     func placeholder<Content: View>(
         when shouldShow: Bool,
         alignment: Alignment = .leading,
