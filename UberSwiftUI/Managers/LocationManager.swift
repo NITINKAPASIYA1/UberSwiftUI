@@ -5,25 +5,26 @@
 //  Created by Nitin on 21/03/25.
 //
 
-import Foundation
 import CoreLocation
 
-class LocationManager : NSObject, ObservableObject{
-    private let locationManager  = CLLocationManager()
+class LocationManager: NSObject, ObservableObject {
+    private let locationManager = CLLocationManager()
+    
+    @Published var userLocation: CLLocation?
     
     override init() {
         super.init()
         locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.distanceFilter = 10
         locationManager.requestWhenInUseAuthorization()
-        locationManager.requestAlwaysAuthorization()
         locationManager.startUpdatingLocation()
     }
-    
 }
-    
-extension LocationManager : CLLocationManagerDelegate {
+
+extension LocationManager: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard !locations.isEmpty else { return }
-        locationManager.stopUpdatingLocation()
+        guard let location = locations.last else { return }
+        userLocation = location
     }
 }

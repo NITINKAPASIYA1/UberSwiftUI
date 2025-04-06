@@ -69,7 +69,7 @@ struct LocationSearchView: View {
                             address: result.subtitle
                         )
                         .onTapGesture {
-                            viewModel.selectLocation(result.title)
+                            viewModel.selectLocation(result)
                             showLocationSearchView.toggle()
                         }
                     }
