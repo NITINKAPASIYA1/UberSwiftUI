@@ -49,7 +49,7 @@ struct UberMapViewRepresentable: UIViewRepresentable {
                     context.coordinator.addAndSelectAnnotation(withCoordinate: coordinate)
                     context.coordinator.configurePolyline(withDestinationCoordinate: coordinate)
                 }
-
+                break
         }
     
             
