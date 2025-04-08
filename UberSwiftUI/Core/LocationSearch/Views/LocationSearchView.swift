@@ -69,8 +69,10 @@ struct LocationSearchView: View {
                             address: result.subtitle
                         )
                         .onTapGesture {
-                            viewModel.selectLocation(result)
-                            mapState = .locationSelected
+                            withAnimation (.spring){
+                                viewModel.selectLocation(result)
+                                mapState = .locationSelected
+                            }
                         }
                     }
                 }
@@ -96,6 +98,6 @@ extension View {
 }
 
 
-#Preview {
-    LocationSearchView(mapState: .constant(.searchingForLocation))
-}
+//#Preview {
+//    LocationSearchView(mapState: .constant(.searchingForLocation))
+//}
