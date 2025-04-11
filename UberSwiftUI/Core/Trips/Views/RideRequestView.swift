@@ -84,7 +84,6 @@ struct RideRequestView: View {
                                 .resizable()
                                 .scaledToFit()
 
-
                             
                             VStack(alignment: .leading,spacing: 4){
                                 Text(type.description)

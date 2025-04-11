@@ -9,6 +9,8 @@ import CoreLocation
 
 class LocationManager: NSObject, ObservableObject {
     private let locationManager = CLLocationManager()
+    let shared = LocationManager()
+    
     
     @Published var userLocation: CLLocation?
     
