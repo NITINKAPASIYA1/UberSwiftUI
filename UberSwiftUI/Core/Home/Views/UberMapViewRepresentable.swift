@@ -11,7 +11,7 @@ import MapKit
 struct UberMapViewRepresentable: UIViewRepresentable {
     
     let mapView = MKMapView()
-    let locationManager = LocationManager()
+    let locationManager = LocationManager.shared
     @Binding var mapState: MapViewState
     @EnvironmentObject var locationViewModel: LocationSearchViewModel
     
@@ -24,7 +24,7 @@ struct UberMapViewRepresentable: UIViewRepresentable {
         // Important: Remove userTrackingMode to prevent auto-centering
         
         // Initial zoom level setup
-        if let userLocation = locationManager.userLocation?.coordinate {
+        if let userLocation = locationManager.userLocation {
             let region = MKCoordinateRegion(
                 center: userLocation,
                 span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
@@ -45,7 +45,7 @@ struct UberMapViewRepresentable: UIViewRepresentable {
             case .searchingForLocation:
                 break
             case .locationSelected:
-                if let coordinate = locationViewModel.selectLocationCoordinate {
+                if let coordinate = locationViewModel.selectedLocationCoordinate {
                     context.coordinator.addAndSelectAnnotation(withCoordinate: coordinate)
                     context.coordinator.configurePolyline(withDestinationCoordinate: coordinate)
                 }
@@ -85,7 +85,7 @@ extension UberMapViewRepresentable {
             // Only set the region initially when the app starts
             self.userLocationCoordinate = userLocation.coordinate
             if !initialRegionSet {
-                if let userCoordinate = parent.locationManager.userLocation?.coordinate {
+                if let userCoordinate = parent.locationManager.userLocation {
                     let region = MKCoordinateRegion(
                         center: userCoordinate,
                         span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
@@ -119,25 +119,6 @@ extension UberMapViewRepresentable {
             anno.coordinate = coordinate
             parent.mapView.addAnnotation(anno)
             parent.mapView.selectAnnotation(anno, animated: true)
-            
-            // Calculate region that includes both user location and destination
-            if let userLocation = parent.locationManager.userLocation?.coordinate {
-                let regionRect = MKMapRect.init(points: [
-                    MKMapPoint(userLocation),
-                    MKMapPoint(coordinate)
-                ])
-                
-                // Add some padding around the points
-                let padding: CGFloat = 100
-                parent.mapView.setVisibleMapRect(regionRect, edgePadding: UIEdgeInsets(top: padding, left: padding, bottom: padding, right: padding), animated: true)
-            } else {
-                // If no user location, just zoom to the annotation
-                let region = MKCoordinateRegion(
-                    center: coordinate,
-                    span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
-                )
-                parent.mapView.setRegion(region, animated: true)
-            }
         }
         
         func getDestinationRoute(from userLocation: CLLocationCoordinate2D , to destination : CLLocationCoordinate2D,
@@ -186,25 +167,45 @@ extension UberMapViewRepresentable {
 }
 
 // Add this extension to MKMapRect for creating a rect from points
-extension MKMapRect {
-    init(points: [MKMapPoint]) {
-        let firstPoint = points.first!
-        var rect = MKMapRect(x: firstPoint.x, y: firstPoint.y, width: 0, height: 0)
-        
-        for point in points {
-            rect = rect.union(MKMapRect(x: point.x, y: point.y, width: 0, height: 0))
-        }
-        
-        // Add some buffer
-        let bufferFraction: Double = 0.3
-        let widthBuffer = rect.size.width * bufferFraction
-        let heightBuffer = rect.size.height * bufferFraction
-        
-        self.init(
-            x: rect.minX - widthBuffer/2,
-            y: rect.minY - heightBuffer/2,
-            width: rect.width + widthBuffer,
-            height: rect.height + heightBuffer
-        )
-    }
-}
+//extension MKMapRect {
+//    init(points: [MKMapPoint]) {
+//        let firstPoint = points.first!
+//        var rect = MKMapRect(x: firstPoint.x, y: firstPoint.y, width: 0, height: 0)
+//        
+//        for point in points {
+//            rect = rect.union(MKMapRect(x: point.x, y: point.y, width: 0, height: 0))
+//        }
+//        
+//        // Add some buffer
+//        let bufferFraction: Double = 0.3
+//        let widthBuffer = rect.size.width * bufferFraction
+//        let heightBuffer = rect.size.height * bufferFraction
+//        
+//        self.init(
+//            x: rect.minX - widthBuffer/2,
+//            y: rect.minY - heightBuffer/2,
+//            width: rect.width + widthBuffer,
+//            height: rect.height + heightBuffer
+//        )
+//    }
+//}
+
+//            parent.mapView.selectAnnotation(anno, animated: true)
+//            // Calculate region that includes both user location and destination
+//            if let userLocation = parent.locationManager.userLocation {
+//                let regionRect = MKMapRect.init(points: [
+//                    MKMapPoint(userLocation),
+//                    MKMapPoint(coordinate)
+//                ])
+//
+//                // Add some padding around the points
+//                let padding: CGFloat = 100
+//                parent.mapView.setVisibleMapRect(regionRect, edgePadding: UIEdgeInsets(top: padding, left: padding, bottom: padding, right: padding), animated: true)
+//            } else {
+//                // If no user location, just zoom to the annotation
+//                let region = MKCoordinateRegion(
+//                    center: coordinate,
+//                    span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
+//                )
+//                parent.mapView.setRegion(region, animated: true)
+//            }
