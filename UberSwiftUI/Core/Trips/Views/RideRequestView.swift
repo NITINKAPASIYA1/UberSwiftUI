@@ -45,7 +45,7 @@ struct RideRequestView: View {
                         
                         Spacer()
                         
-                        Text("1:23 PM")
+                        Text(viewModel.pickupTime ?? "2:43 PM")
                             .font(.system(size: 16,weight: .semibold))
                             .foregroundStyle(.gray)
                     
@@ -53,12 +53,14 @@ struct RideRequestView: View {
                     .padding(.bottom,10)
                     
                     HStack{
-                        Text("Starbucks Coffee")
-                            .font(.system(size: 16,weight: .semibold))
+                        if let location = viewModel.selectedUberLocation {
+                            Text(location.title)
+                                .font(.system(size: 16,weight: .semibold))
+                        }
                         
                         Spacer()
                         
-                        Text("2:43 PM")
+                        Text(viewModel.dropoffTime ?? "2:43 PM")
                             .font(.system(size: 16,weight: .semibold))
                             .foregroundStyle(.gray)
                         
@@ -81,20 +83,26 @@ struct RideRequestView: View {
                 HStack(spacing: 12){
                     ForEach(RideType.allCases) { type in
                         VStack(alignment: .leading){
+                            
                             Image(type.imageName)
                                 .resizable()
                                 .scaledToFit()
+                                .frame(height: 65)
+                                
+                              
 
                             
                             VStack(alignment: .leading,spacing: 4){
                                 Text(type.description)
-                                    .font(.system(size: 16,weight: .semibold))
+                                    .font(.system(size: 14,weight: .semibold))
                                 
                                 Text(viewModel.computeRidePrice(forType: type).toCurrency())
-                                    .font(.system(size: 16,weight: .semibold))
+                                    .font(.system(size: 14,weight: .semibold))
                         
-                            }.padding(12)
+                            }
+                            
                         }
+//                        .padding(.vertical,15)
                         .frame(width: 112, height: 140)
                         .foregroundStyle(type == selectedRideType ? .white : .black)
                         .background(Color(type == selectedRideType ? .systemBlue : .systemGroupedBackground))
