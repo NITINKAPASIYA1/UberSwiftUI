@@ -12,155 +12,141 @@ struct LoginView: View {
     @State var password: String = ""
     
     var body: some View {
-        ZStack{
-            Color(.black)
-                .ignoresSafeArea()
-            
-            VStack(spacing: 40){
-                //image entitled Uber
+        NavigationStack {
+            ZStack{
+                Color(.black)
+                    .ignoresSafeArea()
                 
-                VStack{
-                    Image(.uberLogo)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 130)
+                VStack(spacing: 40){
+                    //image entitled Uber
                     
-                    Text("UBER")
-                        .foregroundStyle(.white)
-                        .font(.system(size: 30, weight: .bold))
-                }
-                
-                //input Field
-                
-                VStack(spacing: 32){
-                    
-                    //inputField : 1
-                    VStack(alignment: .leading,spacing: 12){
-                        Text("Email Address")
-                            .foregroundStyle(.white)
-                            .fontWeight(.semibold)
-                            .font(.footnote)
+                    VStack{
+                        Image(.uberLogo)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 130)
                         
-                        TextField("name@example.com", text: $email)
+                        Text("UBER")
                             .foregroundStyle(.white)
-                         
-                        
-                        Rectangle()
-                            .foregroundStyle(Color(.init(Color(white: 1, opacity: 0.3))))
-                            .frame(width: UIScreen.main.bounds.width - 32, height: 0.7)
+                            .font(.system(size: 30, weight: .bold))
                     }
                     
-                    VStack(alignment: .leading,spacing: 12){
-                        Text("Password")
-                            .foregroundStyle(.white)
-                            .fontWeight(.semibold)
-                            .font(.footnote)
-                        
-                        TextField("Enter Your password", text: $password)
-                            .foregroundStyle(.white)
-                         
-                        
-                        Rectangle()
-                            .foregroundStyle(Color(.init(Color(white: 1, opacity: 0.3))))
-                            .frame(width: UIScreen.main.bounds.width - 32, height: 0.7)
-                    }
+                    //input Field
                     
-                    
-                    
-                }
-                .padding(.top,12)
-                .padding(.horizontal)
-                    
-                
-              
-                
-                
-                VStack{
-                    
-                    HStack{
-                        Rectangle()
-                            .frame(width: 76, height: 1)
-                            .foregroundStyle(.white)
-                            .opacity(0.7)
+                    VStack(spacing: 32){
                         
-                        Text("Sign in with Social")
-                            .foregroundStyle(.white)
-                            .opacity(0.7)
-                            .fontWeight(.semibold)
+                        //inputField : 1
+                        CustomInputField(text: $email, title: "Email Address", placeholder: "Enter Your Email")
                         
+                        CustomInputField(text: $password, title: "Password", placeholder: "Enter Your Password" , isSecureField: true)
                         
-                        Rectangle()
-                            .frame(width: 76, height: 1)
-                            .foregroundStyle(.white)
-                            .opacity(0.7)
+                        HStack{
+                            Spacer()
+                            
+                            Button {
+                                
+                            } label: {
+                                Text("Forgot Password?")
+                                    .foregroundStyle(.white)
+                                    .font(.system(size: 14, weight: .semibold))
+                            }
+                        }
+                        
                         
                     }
+                    .padding(.top,12)
+                    .padding(.horizontal)
                     
-                    HStack(spacing: 30){
+                    
+                    // Social Sign in
+                    VStack{
+                        
+                        HStack{
+                            Rectangle()
+                                .frame(width: 76, height: 1)
+                                .foregroundStyle(.white)
+                                .opacity(0.7)
+                            
+                            Text("Sign in with Social")
+                                .foregroundStyle(.white)
+                                .opacity(0.7)
+                                .fontWeight(.semibold)
+                            
+                            
+                            Rectangle()
+                                .frame(width: 76, height: 1)
+                                .foregroundStyle(.white)
+                                .opacity(0.7)
+                            
+                        }
+                        
+                        HStack(spacing: 30){
+                            
+                            Button {
+                                
+                            } label: {
+                                Image(.facebook)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 44)
+                            }
+                            
+                            Button {
+                                
+                            } label: {
+                                Image(.google)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 44)
+                            }
+                            
+                            
+                        }
+                        
                         
                         Button {
                             
                         } label: {
-                            Image(.facebook)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 44)
+                            HStack{
+                                Text("SIGN IN")
+                                    .foregroundStyle(.black)
+                                
+                                Image(systemName: "arrow.right")
+                                    .foregroundStyle(.black)
+                                
+                            }
+                            .frame(width: UIScreen.main.bounds.width - 32,height: 50)
+                            .background(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .fill(.white)
+                            )
                         }
-
-                        Button {
-                            
-                        } label: {
-                            Image(.google)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 44)
-                        }
-
+                        .padding()
                         
                     }
+                    .padding(.vertical)
                     
-                    
-                    Button {
-                        
+                    NavigationLink {
+                        RegistrationView()
+                            .navigationBarBackButtonHidden(true)
                     } label: {
                         HStack{
-                            Text("SIGN IN")
-                                .foregroundStyle(.black)
-                               
-                            Image(systemName: "arrow.right")
-                                .foregroundStyle(.black)
-                                
-                        }
-                        .frame(width: UIScreen.main.bounds.width - 32,height: 50)
-                        .background(
-                            RoundedRectangle(cornerRadius: 10)
-                                .fill(.white)
-                        )
-                    }
-                    .padding()
-                    
-                }
-                .padding(.vertical)
-                
-                HStack{
-                    
-                    Button {
-                        
-                    } label: {
-                        Text("Don't have an account?")
-                            .foregroundStyle(.white)
-                            .font(.system(size: 14, weight: .semibold))
+                            Text("Don't have an account?")
+                                .foregroundStyle(.white)
+                                .font(.system(size: 14, weight: .semibold))
                             
-                        
-                        Text("Sign up")
-                            .foregroundStyle(.white)
-                            .font(.system(size: 14, weight: .semibold))
+                            
+                            Text("Sign up")
+                                .foregroundStyle(.white)
+                                .font(.system(size: 14, weight: .semibold))
+                        }
                     }
 
-                }
-
-
                     
+                    
+                    
+                    
+                }
             }
         }
     }

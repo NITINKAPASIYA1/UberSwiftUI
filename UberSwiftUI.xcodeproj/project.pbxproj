@@ -6,7 +6,15 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		940075972DB2FBC800E0B200 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 940075962DB2FBC800E0B200 /* GoogleService-Info.plist */; };
+		9400759D2DB2FDF300E0B200 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 9400759C2DB2FDF300E0B200 /* FirebaseAuth */; };
+		9400759F2DB2FDF300E0B200 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 9400759E2DB2FDF300E0B200 /* FirebaseFirestore */; };
+		940075A12DB2FDF300E0B200 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 940075A02DB2FDF300E0B200 /* FirebaseStorage */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
+		940075962DB2FBC800E0B200 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		94E917E12D8CA5CA00EBB2ED /* UberSwiftUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UberSwiftUI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -23,6 +31,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				940075A12DB2FDF300E0B200 /* FirebaseStorage in Frameworks */,
+				9400759D2DB2FDF300E0B200 /* FirebaseAuth in Frameworks */,
+				9400759F2DB2FDF300E0B200 /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -32,6 +43,7 @@
 		94E917D82D8CA5CA00EBB2ED = {
 			isa = PBXGroup;
 			children = (
+				940075962DB2FBC800E0B200 /* GoogleService-Info.plist */,
 				94E917E32D8CA5CA00EBB2ED /* UberSwiftUI */,
 				94E917E22D8CA5CA00EBB2ED /* Products */,
 			);
@@ -65,6 +77,9 @@
 			);
 			name = UberSwiftUI;
 			packageProductDependencies = (
+				9400759C2DB2FDF300E0B200 /* FirebaseAuth */,
+				9400759E2DB2FDF300E0B200 /* FirebaseFirestore */,
+				940075A02DB2FDF300E0B200 /* FirebaseStorage */,
 			);
 			productName = UberSwiftUI;
 			productReference = 94E917E12D8CA5CA00EBB2ED /* UberSwiftUI.app */;
@@ -94,6 +109,9 @@
 			);
 			mainGroup = 94E917D82D8CA5CA00EBB2ED;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				9400759B2DB2FDF300E0B200 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 94E917E22D8CA5CA00EBB2ED /* Products */;
 			projectDirPath = "";
@@ -109,6 +127,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				940075972DB2FBC800E0B200 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -326,6 +345,35 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		9400759B2DB2FDF300E0B200 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.11.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		9400759C2DB2FDF300E0B200 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9400759B2DB2FDF300E0B200 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		9400759E2DB2FDF300E0B200 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9400759B2DB2FDF300E0B200 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+		940075A02DB2FDF300E0B200 /* FirebaseStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9400759B2DB2FDF300E0B200 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseStorage;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 94E917D92D8CA5CA00EBB2ED /* Project object */;
 }
