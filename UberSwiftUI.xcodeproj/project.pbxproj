@@ -7,14 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		940075972DB2FBC800E0B200 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 940075962DB2FBC800E0B200 /* GoogleService-Info.plist */; };
 		9400759D2DB2FDF300E0B200 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 9400759C2DB2FDF300E0B200 /* FirebaseAuth */; };
 		9400759F2DB2FDF300E0B200 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 9400759E2DB2FDF300E0B200 /* FirebaseFirestore */; };
 		940075A12DB2FDF300E0B200 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 940075A02DB2FDF300E0B200 /* FirebaseStorage */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		940075962DB2FBC800E0B200 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		94E917E12D8CA5CA00EBB2ED /* UberSwiftUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UberSwiftUI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -43,7 +41,6 @@
 		94E917D82D8CA5CA00EBB2ED = {
 			isa = PBXGroup;
 			children = (
-				940075962DB2FBC800E0B200 /* GoogleService-Info.plist */,
 				94E917E32D8CA5CA00EBB2ED /* UberSwiftUI */,
 				94E917E22D8CA5CA00EBB2ED /* Products */,
 			);
@@ -127,7 +124,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				940075972DB2FBC800E0B200 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
