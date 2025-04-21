@@ -7,13 +7,14 @@
 
 import Foundation
 import FirebaseAuth
-
+import FirebaseFirestore
 
 class AuthViewModel : ObservableObject {
     @Published var userSession : FirebaseAuth.User?
     
     init() {
         self.userSession = Auth.auth().currentUser
+        fetchUser()
     }
     
     func signIn(withEmail email : String , password : String) {
@@ -30,6 +31,7 @@ class AuthViewModel : ObservableObject {
     }
     
     func registerUser(withEmail email : String , password : String , fullName : String) {
+        
         Auth.auth().createUser(withEmail: email, password: password) {result, error in
             if let error = error {
                 print("DEBUG: Failed to register user with error \(error.localizedDescription)")
@@ -37,8 +39,22 @@ class AuthViewModel : ObservableObject {
             }
             
             print("DEBUG: Successfully registered user with Email \(email) and password \(password)")
-            self.userSession = result?.user
+            
+            guard let firebaseUser = result?.user else { return }
+            self.userSession = firebaseUser
+            
+            let user = User(userName:fullName, email: email, uid: firebaseUser.uid)
+            
+            guard let encodedUser = try? Firestore.Encoder().encode(user) else {return}
+            
+            Firestore.firestore().collection("users").document(firebaseUser.uid).setData(encodedUser){ error in
+                if let error = error {
+                    print("DEBUG: Failed to upload user data with error \(error.localizedDescription)")
+                    return
+                }
+            }
         }
+        
     }
     
     func signOut() {
@@ -49,6 +65,19 @@ class AuthViewModel : ObservableObject {
         } catch let error {
             print("DEBUG: Failed to sign out user with error \(error.localizedDescription)")
         }
+    }
+    
+    func fetchUser() {
+        guard let uid = Auth.auth().currentUser?.uid else { return}
+        
+        Firestore.firestore().collection("users").document(uid).getDocument() { snapshot , error in
+            
+            guard let snapshot = snapshot else { return }
+            
+            guard let user = try? snapshot.data(as: User.self) else {return}
+            
+        }
+        
     }
     
     
