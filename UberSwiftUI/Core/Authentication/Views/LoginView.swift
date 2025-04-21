@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct LoginView: View {
+    @EnvironmentObject var viewModel: AuthViewModel
     @State var email: String = ""
     @State var password: String = ""
     
@@ -106,7 +107,7 @@ struct LoginView: View {
                         
                         
                         Button {
-                            
+                            viewModel.signIn(withEmail: email, password: password)
                         } label: {
                             HStack{
                                 Text("SIGN IN")
