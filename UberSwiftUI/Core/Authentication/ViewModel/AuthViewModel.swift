@@ -24,7 +24,7 @@ class AuthViewModel : ObservableObject {
                 return
             }
             
-            print("DEBUG : User id : \(result?.user.uid ?? "")")
+            self.userSession = result?.user
         }
             
     }
@@ -36,16 +36,15 @@ class AuthViewModel : ObservableObject {
                 return
             }
             
-            guard let user = result?.user else {return}
-            
             print("DEBUG: Successfully registered user with Email \(email) and password \(password)")
-            print("DEBUG: User ID is \(user.uid)")
+            self.userSession = result?.user
         }
     }
     
     func signOut() {
         do {
             try Auth.auth().signOut()
+            self.userSession = nil
             print("DEBUG: Successfully signed out user from firebase")
         } catch let error {
             print("DEBUG: Failed to sign out user with error \(error.localizedDescription)")
