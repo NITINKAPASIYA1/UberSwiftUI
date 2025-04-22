@@ -8,6 +8,11 @@
 import Foundation
 import MapKit
 
+enum locationResultsViewConfig {
+    case ride
+    case saveLocation
+}
+
 class LocationSearchViewModel : NSObject, ObservableObject {
     
     //MARK: Properties
@@ -36,18 +41,23 @@ class LocationSearchViewModel : NSObject, ObservableObject {
     
     //MARK: Helpers
     
-    func selectLocation(_ localSearch : MKLocalSearchCompletion){
-        locationSearch(forLocationSearchCompletion: localSearch) { response, error in
-            if let error = error {
-                print("DEBUG : Error in Location Search \(error.localizedDescription)")
-                return
-            }
-            
-            guard let item = response?.mapItems.first else { return }
-            let coordinate = item.placemark.coordinate
-            self.selectedUberLocation = UberLocation(title: localSearch.title, coordinate: coordinate)
-            
-            print("DEBUG : Selected Location is : \(coordinate)")
+    func selectLocation(_ localSearch : MKLocalSearchCompletion, config : locationResultsViewConfig){
+       switch config {
+            case .ride:
+               locationSearch(forLocationSearchCompletion: localSearch) { response, error in
+                   if let error = error {
+                       print("DEBUG : Error in Location Search \(error.localizedDescription)")
+                       return
+                   }
+                   
+                   guard let item = response?.mapItems.first else { return }
+                   let coordinate = item.placemark.coordinate
+                   self.selectedUberLocation = UberLocation(title: localSearch.title, coordinate: coordinate)
+                   
+                   print("DEBUG : Selected Location is : \(coordinate)")
+               }
+           case .saveLocation:
+               print("DEBUG: Save Location")
         }
     }
     

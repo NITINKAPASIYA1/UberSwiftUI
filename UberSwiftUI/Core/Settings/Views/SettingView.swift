@@ -50,7 +50,7 @@ struct SettingView: View {
                     ForEach(SavedLocationViewModel.allCases , id: \.self) { item in
                         
                         NavigationLink {
-                            Text(item.title)
+                            SavedLocationSearchView()
                         } label: {
                             SavedLocationRowView(viewModel: item)
                         }
