@@ -50,9 +50,9 @@ struct SettingView: View {
                     ForEach(SavedLocationViewModel.allCases , id: \.self) { item in
                         
                         NavigationLink {
-                            SavedLocationSearchView()
+                            SavedLocationSearchView(config: item)
                         } label: {
-                            SavedLocationRowView(viewModel: item)
+                            SavedLocationRowView(viewModel: item, user: user)
                         }
 
                         
@@ -81,6 +81,6 @@ struct SettingView: View {
 
 #Preview {
     NavigationStack{
-        SettingView(user: User(userName: "nitin", email: "nitin@gmail.com", uid: "123"))
+        SettingView(user: DeveloperPreview.shared.mockUser)
     }
 }

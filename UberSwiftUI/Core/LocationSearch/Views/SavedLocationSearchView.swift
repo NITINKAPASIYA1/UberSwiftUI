@@ -10,33 +10,31 @@ import SwiftUI
 struct SavedLocationSearchView: View {
     @State var searchText: String = ""
     @StateObject var viewModel =  LocationSearchViewModel()
+    let config : SavedLocationViewModel
     
     var body: some View {
         VStack{
-            HStack(spacing: 16){
-                Image(systemName: "arrow.left")
-                    .font(.title2)
-                    .imageScale(.medium)
-                    .padding(.leading)
-                
                 TextField("Search For a location... ", text: $viewModel.queryFragment)
                     .frame(height: 40)
                     .padding(.leading)
                     .background(Color(.systemGray5))
                     .cornerRadius(10)
-                    .padding(.trailing)
-            }
+                    .padding()
+            
             
             Spacer()
             
-            LocationSearchResultView(viewModel: viewModel, config: .saveLocation)
+            LocationSearchResultView(viewModel: viewModel, config: .saveLocation(config))
             
-        }.navigationTitle("Add Home")
+        }
+        .navigationTitle(config.subTitle)
+        .navigationBarTitleDisplayMode(.inline)
+            
     }
 }
 
 #Preview {
     NavigationStack{
-        SavedLocationSearchView()
+        SavedLocationSearchView(config: .home)
     }
 }
