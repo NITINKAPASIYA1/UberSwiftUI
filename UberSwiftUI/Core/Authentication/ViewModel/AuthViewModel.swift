@@ -27,11 +27,13 @@ class AuthViewModel : ObservableObject {
             }
             
             self.userSession = result?.user
+            self.fetchUser()
         }
             
     }
     
     func registerUser(withEmail email : String , password : String , fullName : String) {
+        guard let location = LocationManager.shared.userLocation else { return }
         
         Auth.auth().createUser(withEmail: email, password: password) {result, error in
             if let error = error {
@@ -48,12 +50,12 @@ class AuthViewModel : ObservableObject {
                 userName:fullName,
                 email: email,
                 uid: firebaseUser.uid,
-                coordinates: GeoPoint(latitude: 37.28, longitude: -122.05),
+                coordinates: GeoPoint(latitude: location.latitude, longitude:location.longitude),
                 accountType: .driver,
             )
             
             guard let encodedUser = try? Firestore.Encoder().encode(user) else {return}
-            
+            self.currentUser = user
             Firestore.firestore().collection("users").document(firebaseUser.uid).setData(encodedUser){ error in
                 if let error = error {
                     print("DEBUG: Failed to upload user data with error \(error.localizedDescription)")
@@ -84,9 +86,6 @@ class AuthViewModel : ObservableObject {
             guard let user = try? snapshot.data(as: User.self) else {return}
             
             self.currentUser = user
-            
-            print("DEBUG: Current user \(user)")
-            
         }
         
     }

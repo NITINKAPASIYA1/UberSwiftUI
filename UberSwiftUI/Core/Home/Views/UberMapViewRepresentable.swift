@@ -14,6 +14,7 @@ struct UberMapViewRepresentable: UIViewRepresentable {
     let locationManager = LocationManager.shared
     @Binding var mapState: MapViewState
     @EnvironmentObject var locationViewModel: LocationSearchViewModel
+    @EnvironmentObject var homeViewModel: HomeViewModel
     
     func makeUIView(context: Context) -> some UIView {
         mapView.delegate = context.coordinator
@@ -40,6 +41,7 @@ struct UberMapViewRepresentable: UIViewRepresentable {
         switch mapState {
             case .noInput:
                 context.coordinator.clearMapViewAndRecenterOnUserLocation()
+                context.coordinator.addDriverToMap(homeViewModel.drivers)
                 break
             case .searchingForLocation:
                 break
@@ -146,6 +148,16 @@ extension UberMapViewRepresentable {
             }
 
         }
+        
+        func addDriverToMap(_ drivers : [User]) {
+            // MARK: both line 154 and 155-156 are same
+            let annotations = drivers.map({DriverAnnotation(driver: $0) })
+            self.parent.mapView.addAnnotations(annotations)
+//            for driver in drivers {
+//                let driverAnno = DriverAnnotation(driver: driver)
+//            }
+        }
+        
     }
 }
 

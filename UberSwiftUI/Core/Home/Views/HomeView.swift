@@ -12,6 +12,8 @@ struct HomeView: View {
     @State private var showSideMenu = false
     @EnvironmentObject var locationViewModel : LocationSearchViewModel
     @EnvironmentObject var authViewModel : AuthViewModel
+    @EnvironmentObject var homeViewModel : HomeViewModel
+    
     
     var body: some View {
         Group {
@@ -87,5 +89,6 @@ extension HomeView {
     HomeView()
         .environmentObject(LocationSearchViewModel())
         .environmentObject(AuthViewModel())
+        .environmentObject(HomeViewModel())
         
 }
