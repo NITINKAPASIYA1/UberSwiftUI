@@ -13,7 +13,6 @@ import Combine
 class HomeViewModel: ObservableObject {
     
     @Published var drivers = [User]()
-    var currentUser : User?
     private let service = UserService.shared
     private var cancellables = Set<AnyCancellable>()
     
@@ -45,7 +44,6 @@ class HomeViewModel: ObservableObject {
         service.$user
             .sink { user in
                 guard let user = user else {return }
-                self.currentUser = user
                 guard user.accountType == .passenger else { return }
                 self.fetchDrivers()
             }
