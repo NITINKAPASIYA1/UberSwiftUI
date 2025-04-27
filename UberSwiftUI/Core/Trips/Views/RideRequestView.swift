@@ -9,7 +9,7 @@ import SwiftUI
 
 struct RideRequestView: View {
     @State private var selectedRideType: RideType = .uberX
-    @EnvironmentObject var viewModel : LocationSearchViewModel
+    @EnvironmentObject var viewModel : HomeViewModel
     
     var body: some View {
         VStack{
@@ -150,7 +150,7 @@ struct RideRequestView: View {
             
             
             Button {
-                
+                viewModel.requestTrip()
             } label: {
                 Text("Confirm Ride")
                     .fontWeight(.bold)
@@ -169,5 +169,5 @@ struct RideRequestView: View {
 
 #Preview {
     RideRequestView()
-        .environmentObject(LocationSearchViewModel())
+        .environmentObject(HomeViewModel())
 }

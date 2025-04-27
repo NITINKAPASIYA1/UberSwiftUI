@@ -16,13 +16,16 @@ import SwiftUI
 import MapKit
 
 struct AcceptTripView: View {
-    @State private var position: MapCameraPosition
-    @State private var mapLocation: CLLocationCoordinate2D
-    
-    init(region: MKCoordinateRegion) {
-        let center = CLLocationCoordinate2D(latitude: 37.3318, longitude: -122.0312)
-        self._mapLocation = State(initialValue: center)
-        self._position = State(initialValue: .region(MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: 0.025, longitudeDelta: 0.025))))
+    @State private var region : MKCoordinateRegion
+    let trip : Trip
+    let annotationItem : UberLocation
+        
+    init(trip : Trip) {
+        let center = CLLocationCoordinate2D(latitude: trip.pickupLocation.latitude, longitude: trip.pickupLocation.longitude)
+        let span = MKCoordinateSpan(latitudeDelta: 0.025, longitudeDelta: 0.025)
+        self.region = MKCoordinateRegion(center: center, span: span)
+        self.trip = trip
+        self.annotationItem = UberLocation(title: trip.pickupLocationName, coordinate: trip.pickupLocation.toCoordinate())
     }
     
     var body: some View {
@@ -53,9 +56,9 @@ struct AcceptTripView: View {
                     }
                     .frame(width: 56, height: 56)
                     .foregroundStyle(.white)
-                    .background(Color(.systemBlue))
+                    .background(Color(.black))
                     .cornerRadius(10)
-                        
+                    
                 }
                 .padding()
                 
@@ -72,7 +75,7 @@ struct AcceptTripView: View {
                         .clipShape(Circle())
                     
                     VStack(alignment: .leading) {
-                        Text("NITIN")
+                        Text(trip.passengerName)
                             .bold()
                         
                         HStack {
@@ -91,7 +94,7 @@ struct AcceptTripView: View {
                     VStack(spacing: 4) {
                         Text("Earnings")
                         
-                        Text("$22.04")
+                        Text(trip.tripCost.toCurrency())
                             .font(.system(size: 24, weight: .semibold))
                     }
                     .padding()
@@ -104,12 +107,12 @@ struct AcceptTripView: View {
             VStack {
                 VStack(spacing: 5) {
                     HStack {
-                        Text("Apple Campus")
+                        Text(trip.pickupLocationName)
                             .font(.system(size: 18, weight: .semibold))
                         
                         Spacer()
                         
-                        Text("5.2")
+                        Text(trip.pickupLocationAddress)
                             .font(.system(size: 16, weight: .semibold))
                     }
                     
@@ -128,20 +131,56 @@ struct AcceptTripView: View {
                 .padding(.horizontal)
                 
                 // Updated Map with new API
-                Map(position: $position) {
-                    Marker("Pickup Location", coordinate: mapLocation)
+                Map(coordinateRegion: $region,annotationItems: [annotationItem]){
+                    item in
+                    
+                    MapMarker(coordinate: item.coordinate)
+                    
                 }
                 .frame(height: 220)
                 .cornerRadius(10)
-                .shadow(color: .black.opacity(0.6), radius: 10)
+                .shadow(color: .black, radius: 4)
                 .padding()
                 
                 Divider()
             }
+            
+            HStack{
+                
+                Button {
+                    
+                } label: {
+                    Text("Reject")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundStyle(.white)
+                        .frame(width: (UIScreen.main.bounds.width / 2) - 32, height: 55)
+                        .background(Color(.systemRed))
+                        .cornerRadius(10)
+                        
+                }
+                
+                Spacer()
+                
+                Button {
+                    
+                } label: {
+                    Text("Accept")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundStyle(.white)
+                        .frame(width: (UIScreen.main.bounds.width / 2) - 32, height: 55)
+                        .background(Color(.black))
+                        .cornerRadius(10)
+                        
+                }
+
+            }
+            .padding(.top)
+            .padding(.horizontal)
         }
+        .background(Color.theme.backgroundColor)
     }
 }
 
 #Preview {
-    AcceptTripView(region: MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 37.3318, longitude: -122.0312), span: MKCoordinateSpan(latitudeDelta: 0.025, longitudeDelta: 0.025)))
+//    AcceptTripView(trip: <#Trip#>)
 }
