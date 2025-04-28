@@ -158,17 +158,16 @@ extension HomeViewModel {
                 self.trip = trip
                 
                 print("DEBUG : Fetched trip \(trip)")
+                
+                self.getDestinationRoute(from: trip.driverLocation.toCoordinate(), to: trip.pickupLocation.toCoordinate()) { route in
+                    print("DEBUG : Expected Travel time is \(route.expectedTravelTime / 60)")
+                }
 
             
         }
     }
     
 }
-
-
-
-
-
 
 //MARK: location Search helpers
 extension HomeViewModel {
