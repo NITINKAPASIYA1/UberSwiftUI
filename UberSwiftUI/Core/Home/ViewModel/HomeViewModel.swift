@@ -84,6 +84,7 @@ extension HomeViewModel {
     }
     
     func requestTrip() {
+        
         guard let drivers = drivers.first else { return }
         guard let currentUser = self.currentUser else { return }
         guard let dropoffLocation = self.selectedUberLocation else { return }
@@ -102,6 +103,7 @@ extension HomeViewModel {
             guard let placemark = placemark else { return }
             print("DEBUG: Placemark is \(placemark.name ?? "")")
             
+            let tripCost = self.computeRidePrice(forType: .uberX)
 
             let trip = Trip(id: NSUUID().uuidString,
                             passengerUid: currentUser.uid,
@@ -112,29 +114,20 @@ extension HomeViewModel {
                             passengerLocation: currentUser.coordinates,
                             pickupLocationName: placemark.name ?? "",
                             dropoffLocationName: dropoffLocation.title,
-                            pickupLocationAddress: "123 Main St",
+                            pickupLocationAddress: self.addressFromPlacemark(placemark),
                             pickupLocation: currentUser.coordinates,
                             dropoffLocation: dropoffGeoPoint,
-                            tripCost: 50.0)
+                            tripCost: tripCost,
+                            distanceToPassenger: 0,
+                            travelTimeToPassenger: 0,
+            )
             
             guard let encodedTrip = try? Firestore.Encoder().encode(trip) else { return }
-            
-            Firestore.firestore().collection("trips").document(trip.id).setData(encodedTrip) { error in
-                if let error = error {
-                    print("DEBUG: Failed to upload trip with error \(error.localizedDescription)")
-                    return
-                }
-                
+            Firestore.firestore().collection("trips").document().setData(encodedTrip) { _ in
                 print("DEBUG: Successfully uploaded trip")
-                self.selectedUberLocation = nil
+//                self.selectedUberLocation = nil
             }
-
-
-            
-            
         }
-        
-
     }
 }
 
@@ -160,9 +153,9 @@ extension HomeViewModel {
                 print("DEBUG : Fetched trip \(trip)")
                 
                 self.getDestinationRoute(from: trip.driverLocation.toCoordinate(), to: trip.pickupLocation.toCoordinate()) { route in
-                    print("DEBUG : Expected Travel time is \(route.expectedTravelTime / 60)")
+                    self.trip?.travelTimeToPassenger = Int(route.expectedTravelTime / 60)
+                    self.trip?.distanceToPassenger = route.distance
                 }
-
             
         }
     }
@@ -171,6 +164,21 @@ extension HomeViewModel {
 
 //MARK: location Search helpers
 extension HomeViewModel {
+    
+    func addressFromPlacemark(_ placemark : CLPlacemark) -> String {
+        var result = ""
+        if let throughfare =  placemark.thoroughfare{
+            result += throughfare
+        }
+        if let subThoroughfare =  placemark.subThoroughfare{
+            result += " \(subThoroughfare)"
+        }
+        if let subAdministrativeArea = placemark.subAdministrativeArea {
+            result += ", \(subAdministrativeArea)"
+        }
+        
+        return result
+    }
     
     func getPlacemark(forLocation location : CLLocation, completion : @escaping (CLPlacemark?, Error?) -> Void) {
         CLGeocoder().reverseGeocodeLocation(location) { MKPlacemarks, error in

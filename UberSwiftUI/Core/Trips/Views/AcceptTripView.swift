@@ -48,7 +48,7 @@ struct AcceptTripView: View {
                     Spacer()
                     
                     VStack {
-                        Text("10")
+                        Text("\(trip.travelTimeToPassenger)")
                             .bold()
                         
                         Text("min")
@@ -112,12 +112,14 @@ struct AcceptTripView: View {
                         
                         Spacer()
                         
-                        Text(trip.pickupLocationAddress)
+                        Text(trip.distanceToPassenger.distanceInMiles())
                             .font(.system(size: 16, weight: .semibold))
+                        
                     }
                     
                     HStack {
-                        Text("1 Infinite Loop, Cupertino, CA 95014")
+                        Text(trip.pickupLocationAddress)
+                            
                             .font(.system(size: 16))
                             .foregroundStyle(.gray)
                         
