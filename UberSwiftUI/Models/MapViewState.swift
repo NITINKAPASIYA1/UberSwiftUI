@@ -13,6 +13,6 @@ enum MapViewState {
     case locationSelected
     case polylineAdded
     case tripRequested
-    case tripAccepted
     case tripRejected
+    case tripAccepted
 }

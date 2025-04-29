@@ -75,9 +75,9 @@ extension HomeView {
                     }
                     else if mapState == .tripRequested {
                         //show trip loading view
+                      
                         TripLoadingView()
                             .transition(.move(edge: .bottom))
-                        
                     }
                     else if mapState == .tripAccepted {
                         //show trip accepted view
@@ -120,7 +120,7 @@ extension HomeView {
             withAnimation(.spring()) {
                 switch trip.state {
                 case .requested:
-                    self.mapState = .tripAccepted
+                    self.mapState = .tripRequested
                 case .accepted:
                     self.mapState = .tripAccepted
                 case .rejected:
