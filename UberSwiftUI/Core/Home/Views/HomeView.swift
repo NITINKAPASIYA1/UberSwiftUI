@@ -67,15 +67,41 @@ extension HomeView {
                 
             }
             
-            if mapState == .locationSelected || mapState == .polylineAdded {
-                RideRequestView()
-                    .transition(.move(edge: .bottom))
+            if let user = authViewModel.currentUser {
+                if user.accountType == .passenger {
+                    if mapState == .locationSelected || mapState == .polylineAdded {
+                        RideRequestView()
+                            .transition(.move(edge: .bottom))
+                    }
+                    else if mapState == .tripRequested {
+                        //show trip loading view
+                        TripLoadingView()
+                            .transition(.move(edge: .bottom))
+                        
+                    }
+                    else if mapState == .tripAccepted {
+                        //show trip accepted view
+                        TripAcceptedView()
+                            .transition(.move(edge: .bottom))
+                    }
+                    else if mapState == .tripRejected {
+                        //show trip rejected view
+                    }
+
+                }
+                else {
+                    if let trip = homeViewModel.trip {
+                        AcceptTripView(trip: trip)
+                            .transition(.move(edge: .bottom))
+                    }
+                }
+                
             }
+                
             
-            if let trip = homeViewModel.trip {
-                AcceptTripView(trip: trip)
-                    .transition(.move(edge: .bottom))
-            }
+           
+            
+           
         }
         .edgesIgnoringSafeArea(.bottom)
         .onReceive(LocationManager.shared.$userLocation) { location in
@@ -86,6 +112,20 @@ extension HomeView {
         .onReceive(homeViewModel.$selectedUberLocation) { location in
             if location != nil {
                 self.mapState = .locationSelected
+            }
+        }
+        .onReceive(homeViewModel.$trip) { trip in
+            guard let trip = trip else {return}
+            
+            withAnimation(.spring()) {
+                switch trip.state {
+                case .requested:
+                    self.mapState = .tripAccepted
+                case .accepted:
+                    self.mapState = .tripAccepted
+                case .rejected:
+                    self.mapState = .tripRejected
+                }
             }
         }
     }
