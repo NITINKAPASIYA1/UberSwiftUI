@@ -53,7 +53,7 @@ class HomeViewModel: NSObject, ObservableObject {
                     self.fetchDrivers()
                     self.addTripObserverForPassenger()
                 }else {
-                    self.fetchTrips()
+                    self.addTripObserverForDriver()
                 }
             }
             .store(in: &cancellables)
@@ -153,19 +153,17 @@ extension HomeViewModel {
 
 extension HomeViewModel {
     
-    func fetchTrips() {
-        guard let currentUser = currentUser else { return }
+    func addTripObserverForDriver() {
+        guard let currentUser = self.currentUser , currentUser.accountType == .driver else { return }
         
         Firestore.firestore().collection("trips")
             .whereField("driverUid", isEqualTo: currentUser.uid)
-            .getDocuments { snapshot, error in
-                if let error = error {
-                    print("DEBUG: Failed to fetch trip with error \(error.localizedDescription)")
-                    return
-                }
+            .addSnapshotListener { snapshot, _ in
+                guard let change = snapshot?.documentChanges.first ,
+                        change.type == .added
+                        || change.type == .modified else { return }
                 
-                guard let documents = snapshot?.documents , let document = documents.first else { return }
-                guard let trip = try? document.data(as:Trip.self) else {return}
+                guard let trip = try? change.document.data(as: Trip.self) else {return}
                 self.trip = trip
                 
                 print("DEBUG : Fetched trip \(trip)")
@@ -174,9 +172,28 @@ extension HomeViewModel {
                     self.trip?.travelTimeToPassenger = Int(route.expectedTravelTime / 60)
                     self.trip?.distanceToPassenger = route.distance
                 }
-            
-        }
+            }
     }
+    
+    
+    
+//    func fetchTrips() {
+//        guard let currentUser = currentUser else { return }
+//        
+//        Firestore.firestore().collection("trips")
+//            .whereField("driverUid", isEqualTo: currentUser.uid)
+//            .getDocuments { snapshot, error in
+//                if let error = error {
+//                    print("DEBUG: Failed to fetch trip with error \(error.localizedDescription)")
+//                    return
+//                }
+//                
+//                guard let documents = snapshot?.documents , let document = documents.first else { return }
+//                guard let trip = try? document.data(as:Trip.self) else {return}
+//               
+//            
+//        }
+//    }
     
     func rejectTrip(){
         updateTripState(state: .rejected)
@@ -188,9 +205,14 @@ extension HomeViewModel {
     
     private func updateTripState(state : TripState) {
         guard let trip = trip else { return }
-        Firestore.firestore().collection("trips").document(trip.id).updateData([
-            "state" : state.rawValue
-        ]) { _ in
+        
+        var data = ["state" : state.rawValue]
+        
+        if state == .accepted {
+            data["travelTimeToPassenger"] =  trip.travelTimeToPassenger
+        }
+        
+        Firestore.firestore().collection("trips").document(trip.id).updateData(data) { _ in
             print("DEBUG : Successfully updated trip state \(state)")
         }
     }
